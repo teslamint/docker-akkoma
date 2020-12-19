@@ -1,0 +1,57 @@
+# default nginx site config for Pleroma
+#
+# Simple installation instructions:
+# 1. Install your TLS certificate, possibly using Let's Encrypt.
+# 2. Replace 'example.tld' with your instance's domain wherever it appears.
+# 3. Copy this file to /etc/nginx/sites-available/ and then add a symlink to it
+#    in /etc/nginx/sites-enabled/ and run 'nginx -s reload' or restart nginx.
+
+proxy_cache_path /tmp/pleroma-media-cache levels=1:2 keys_zone=pleroma_media_cache:10m max_size=10g
+                 inactive=720m use_temp_path=off;
+
+# this is explicitly IPv4 since Pleroma.Web.Endpoint binds on IPv4 only
+# and `localhost.` resolves to [::0] on some systems: see issue #930
+upstream phoenix {
+    server web:4000 max_fails=5 fail_timeout=60s;
+}
+
+server {
+    server_name    localhost;
+
+    listen         ${NGINX_PORT};
+    listen         [::]:${NGINX_PORT};
+
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_buffers 16 8k;
+    gzip_http_version 1.1;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript application/activity+json application/atom+xml;
+
+    # the nginx default is 1m, not enough for large media uploads
+    client_max_body_size 16m;
+    ignore_invalid_headers off;
+
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+    location / {
+        proxy_pass http://phoenix;
+    }
+
+    location ~ ^/(media|proxy) {
+        proxy_cache        pleroma_media_cache;
+        slice              1m;
+        proxy_cache_key    $host$uri$is_args$args$slice_range;
+        proxy_set_header   Range $slice_range;
+        proxy_cache_valid  200 206 301 304 1h;
+        proxy_cache_lock   on;
+        proxy_ignore_client_abort on;
+        proxy_buffering    on;
+        chunked_transfer_encoding on;
+        proxy_pass         http://phoenix;
+    }
+}

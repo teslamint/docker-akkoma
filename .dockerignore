@@ -1,0 +1,5 @@
+.env.*
+nginx.conf
+static/
+postgres/
+uploads/

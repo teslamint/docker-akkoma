@@ -1,0 +1,64 @@
+version: '3.3'
+
+services:
+  nginx:
+    image: nginx:1.21-alpine
+    hostname: nginx
+    container_name: pleroma_nginx
+    restart: always
+    environment:
+      NGINX_PORT: 80
+    ports:
+      - "127.0.0.1:80:80"
+    volumes:
+      - ./templates:/etc/nginx/templates
+      - nginx_cache:/var/cache/nginx
+      - nginx_pid:/var/run
+    depends_on:
+      - web
+
+  postgres:
+    image: postgres:9.6-alpine
+    hostname: db
+    container_name: pleroma_postgres
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "pleroma"]
+    restart: always
+    env_file:
+      - .env.postgres
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+
+  web:
+    build: .
+    image: teslamint/pleroma
+    hostname: web
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -q --spider --proxy=off localhost:4000 || exit 1",
+        ]
+    container_name: pleroma_web
+    restart: always
+    volumes:
+      - ./uploads:/var/lib/pleroma/uploads
+      - ./static:/var/lib/pleroma/static
+      - ./config.exs:/etc/pleroma/config.exs:ro
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+  pghero:
+    image: ankane/pghero
+    hostname: pghero
+    container_name: pleroma_pghero
+    env_file:
+      - .env.pghero
+    depends_on:
+      - postgres
+
+volumes:
+  nginx_cache:
+  nginx_pid:

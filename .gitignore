@@ -1,0 +1,8 @@
+.env
+.env.postgres
+.env.pghero
+config/secret.exs
+postgres
+uploads
+static
+!static/.gitkeep
