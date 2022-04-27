@@ -24,9 +24,9 @@ ENV UID=911 GID=911
 ARG DATA=/var/lib/pleroma
 
 RUN apk update && \
-	apk add exiftool imagemagick libmagic ncurses postgresql-client && \
+	apk add exiftool imagemagick libmagic ncurses postgresql-client ffmpeg && \
 	addgroup -g ${GID} pleroma && \
-	adduser --system --shell /bin/false --home ${HOME} -u ${UID} pleroma
+	adduser --system --shell /bin/false --home ${HOME} -D -G pleroma -u ${UID} pleroma
 
 RUN mkdir -p /etc/pleroma \
     && chown -R pleroma /etc/pleroma \
@@ -36,16 +36,11 @@ RUN mkdir -p /etc/pleroma \
 
 USER pleroma
 
-COPY --from=builder --chown=pleroma:0 /pleroma/release ${HOME}
-COPY --from=builder --chown=pleroma:0 /pleroma/docker-entrypoint.sh /pleroma/docker-entrypoint.sh
+COPY --from=builder --chown=pleroma /pleroma/release ${HOME}
+COPY --from=builder --chown=pleroma /pleroma/docker-entrypoint.sh /pleroma/docker-entrypoint.sh
 
-COPY config/secret.exs ${DATA}/config/secret.exs
-
-COPY ./config/docker.exs /etc/pleroma/config.exs
-COPY ./docker-entrypoint.sh ${HOME}
+COPY ./config.exs /etc/pleroma/config.exs
 
 EXPOSE 4000
 
-VOLUME /var/lib/pleroma/uploads/
-
-ENTRYPOINT ["/opt/pleroma/docker-entrypoint.sh"]
+ENTRYPOINT ["/pleroma/docker-entrypoint.sh"]
