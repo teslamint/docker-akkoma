@@ -17,7 +17,7 @@ RUN cd pleroma && echo "import Mix.Config" > config/prod.secret.exs && \
 	mkdir release && \
 	mix release --path release
 
-FROM --platform=$TARGETPLATFORM alpine:3.15.4 as final
+FROM --platform=$TARGETPLATFORM alpine:3.16.2 as final
 
 ENV UID=911 GID=911
 
