@@ -31,7 +31,7 @@ services:
 
   web:
     build: .
-    image: teslamint/pleroma
+    image: teslamint/pleroma:stable
     hostname: web
     healthcheck:
       test:
