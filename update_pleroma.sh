@@ -12,4 +12,5 @@ if [ "$IMAGES" != "" ]; then
 fi
 docker system prune -f
 docker push teslamint/pleroma:latest
+docker push teslamint/pleroma:stable
 docker push teslamint/pleroma:${COMMIT_ID}
