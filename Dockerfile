@@ -1,11 +1,11 @@
-FROM elixir:1.13.4-alpine as builder
+FROM --platform=$TARGETPLATFORM elixir:1.13.4-alpine as builder
 
 ENV MIX_ENV=prod
 
 ARG PLEROMA_VER=stable
 ARG DATA=/var/lib/pleroma
 
-RUN apk add git gcc g++ musl-dev make cmake file-dev
+RUN apk add git gcc g++ musl-dev make cmake file-dev ffmpeg imagemagick exiftool
 
 RUN git clone -b stable --depth=10 https://git.pleroma.social/pleroma/pleroma.git && \
     cd pleroma && git checkout "${PLEROMA_VER}"
@@ -17,7 +17,7 @@ RUN cd pleroma && echo "import Mix.Config" > config/prod.secret.exs && \
 	mkdir release && \
 	mix release --path release
 
-FROM alpine:3.15.4 as final
+FROM --platform=$TARGETPLATFORM alpine:3.15.4 as final
 
 ENV UID=911 GID=911
 
