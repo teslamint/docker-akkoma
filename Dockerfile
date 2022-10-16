@@ -21,6 +21,7 @@ FROM --platform=$TARGETPLATFORM alpine:3.16.2 as final
 
 ENV UID=911 GID=911
 
+ARG HOME=/pleroma
 ARG DATA=/var/lib/pleroma
 
 RUN apk update && \
@@ -37,7 +38,7 @@ RUN mkdir -p /etc/pleroma \
 USER pleroma
 
 COPY --from=builder --chown=pleroma /pleroma/release ${HOME}
-COPY --from=builder --chown=pleroma /pleroma/docker-entrypoint.sh /pleroma/docker-entrypoint.sh
+COPY --from=builder --chown=pleroma /pleroma/docker-entrypoint.sh ${HOME}/docker-entrypoint.sh
 
 COPY ./config.exs /etc/pleroma/config.exs
 
