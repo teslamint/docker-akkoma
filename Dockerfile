@@ -5,10 +5,13 @@ ENV MIX_ENV=prod
 ARG PLEROMA_VER=stable
 ARG DATA=/var/lib/pleroma
 
-RUN apk add git gcc g++ musl-dev make cmake file-dev ffmpeg imagemagick exiftool
+RUN apk add git gcc g++ musl-dev make cmake file-dev ffmpeg imagemagick exiftool patch
 
 RUN git clone -b stable --depth=10 https://git.pleroma.social/pleroma/pleroma.git && \
     cd pleroma && git checkout "${PLEROMA_VER}"
+
+RUN cd pleroma && wget -O- https://gist.githubusercontent.com/teslamint/1ca70d83197409be662966e8f1fea257/raw/35c7e2d85e7e1d08f45a67afcd1319c70f7b366b/patch-1.patch | patch -p1 && \
+	cd ..
 
 RUN cd pleroma && echo "import Mix.Config" > config/prod.secret.exs && \
 	mix local.hex --force && \
@@ -24,8 +27,7 @@ ENV UID=911 GID=911
 ARG HOME=/pleroma
 ARG DATA=/var/lib/pleroma
 
-RUN apk update && \
-	apk add exiftool imagemagick libmagic ncurses postgresql-client ffmpeg && \
+RUN apk add --update --no-cache exiftool imagemagick libmagic ncurses postgresql-client ffmpeg && \
 	addgroup -g ${GID} pleroma && \
 	adduser --system --shell /bin/false --home ${HOME} -D -G pleroma -u ${UID} pleroma
 
