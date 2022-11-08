@@ -18,7 +18,7 @@ services:
       - web
 
   postgres:
-    image: postgres:9.6-alpine
+    image: postgres:12-alpine
     hostname: db
     container_name: pleroma_postgres
     healthcheck:
