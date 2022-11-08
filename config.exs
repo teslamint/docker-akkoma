@@ -30,6 +30,10 @@ config :pleroma, Pleroma.Repo,
   database: System.get_env("DB_NAME", "pleroma"),
   hostname: System.get_env("DB_HOST", "db"),
   pool_size: 10
+  prepare: :named,
+  parameters: [
+    plan_cache_mode: "force_custom_plan"
+  ]
 
 # Configure web push notifications
 config :web_push_encryption, :vapid_details, subject: "mailto:#{System.get_env("NOTIFY_EMAIL")}"
