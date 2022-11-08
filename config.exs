@@ -29,7 +29,7 @@ config :pleroma, Pleroma.Repo,
   password: System.fetch_env!("DB_PASS"),
   database: System.get_env("DB_NAME", "pleroma"),
   hostname: System.get_env("DB_HOST", "db"),
-  pool_size: 10
+  pool_size: 10,
   prepare: :named,
   parameters: [
     plan_cache_mode: "force_custom_plan"
