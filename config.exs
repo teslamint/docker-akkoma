@@ -35,6 +35,25 @@ config :pleroma, Pleroma.Repo,
     plan_cache_mode: "force_custom_plan"
   ]
 
+# Configure frontends
+config :pleroma, :frontends,
+  primary: %{
+    "name" => "pleroma-fe",
+    "ref" => "stable"
+  },
+  admin: %{
+    "name" => "admin-fe",
+    "ref" => "stable"
+  },
+  mastodon: %{
+    "name" => "mastodon-fe",
+    "ref" => "akkoma"
+  },
+  fedibird: %{
+    "name" => "fedibird-fe",
+    "ref" => "akkoma"
+  }
+
 # Configure web push notifications
 config :web_push_encryption, :vapid_details, subject: "mailto:#{System.get_env("NOTIFY_EMAIL")}"
 
