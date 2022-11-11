@@ -7,13 +7,13 @@ ARG DATA=/var/lib/pleroma
 
 RUN apk add git gcc g++ musl-dev make cmake file-dev ffmpeg imagemagick exiftool patch
 
-RUN git clone -b stable --depth=10 https://git.pleroma.social/pleroma/pleroma.git && \
-    cd pleroma && git checkout "${PLEROMA_VER}"
+RUN git clone -b stable --depth=10 https://akkoma.dev/AkkomaGang/akkoma.git && \
+    cd akkoma && git checkout "${PLEROMA_VER}"
 
-RUN cd pleroma && wget -O- https://gist.githubusercontent.com/teslamint/1ca70d83197409be662966e8f1fea257/raw/35c7e2d85e7e1d08f45a67afcd1319c70f7b366b/patch-1.patch | patch -p1 && \
+RUN cd akkoma && wget -O- https://gist.githubusercontent.com/teslamint/1ca70d83197409be662966e8f1fea257/raw/35c7e2d85e7e1d08f45a67afcd1319c70f7b366b/patch-1.patch | patch -p1 && \
 	cd ..
 
-RUN cd pleroma && echo "import Mix.Config" > config/prod.secret.exs && \
+RUN cd akkoma && echo "import Mix.Config" > config/prod.secret.exs && \
 	mix local.hex --force && \
 	mix local.rebar --force && \
 	mix deps.get --only prod && \
@@ -39,10 +39,10 @@ RUN mkdir -p /etc/pleroma \
 
 USER pleroma
 
-COPY --from=builder --chown=pleroma /pleroma/release ${HOME}
-COPY --from=builder --chown=pleroma /pleroma/docker-entrypoint.sh ${HOME}/docker-entrypoint.sh
+COPY --from=builder --chown=pleroma /akkoma/release ${HOME}
+COPY --from=builder --chown=pleroma /akkoma/docker-entrypoint.sh ${HOME}/docker-entrypoint.sh
 
-COPY ./config.exs /etc/pleroma/config.exs
+# COPY ./config.exs /etc/pleroma/config.exs
 
 EXPOSE 4000
 
