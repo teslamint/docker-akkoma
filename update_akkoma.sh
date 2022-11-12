@@ -39,6 +39,7 @@ COMMIT_ID=${COMMIT_HASH:-stable}
 
 docker buildx build --rm -t teslamint/akkoma:latest -t teslamint/akkoma:stable -t teslamint/akkoma:${COMMIT_ID} . --build-arg "PLEROMA_VER=$COMMIT_ID"
 zero_downtime_deploy
+docker-compose up -d
 
 # install frontends
 if [ ! -d static/frontends ]; then
