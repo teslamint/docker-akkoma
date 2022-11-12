@@ -43,6 +43,12 @@ COPY --from=builder --chown=pleroma /akkoma/release ${HOME}
 COPY --from=builder --chown=pleroma /akkoma/docker-entrypoint.sh ${HOME}/docker-entrypoint.sh
 
 # COPY ./config.exs /etc/pleroma/config.exs
+WORKDIR /pleroma
+
+RUN /pleroma/bin/pleroma_ctl frontend install pleroma-fe --ref stable
+RUN /pleroma/bin/pleroma_ctl frontend install admin-fe --ref stable
+RUN /pleroma/bin/pleroma_ctl frontend install mastodon-fe --ref akkoma
+RUN /pleroma/bin/pleroma_ctl frontend install fedibird-fe --ref akkoma
 
 EXPOSE 4000
 
