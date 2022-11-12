@@ -32,10 +32,10 @@ RUN apk add --update --no-cache exiftool imagemagick libmagic ncurses postgresql
 	adduser --system --shell /bin/false --home ${HOME} -D -G pleroma -u ${UID} pleroma
 
 RUN mkdir -p /etc/pleroma \
-    && chown -R pleroma /etc/pleroma \
+    && chown -R pleroma:pleroma /etc/pleroma \
     && mkdir -p ${DATA}/uploads \
     && mkdir -p ${DATA}/static \
-    && chown -R pleroma ${DATA}
+    && chown -R pleroma:pleroma ${DATA}
 
 USER pleroma
 
