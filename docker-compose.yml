@@ -39,7 +39,6 @@ services:
           "CMD-SHELL",
           "wget -q --spider --proxy=off localhost:4000 || exit 1",
         ]
-    container_name: pleroma_web
     restart: always
     volumes:
       - ./uploads:/var/lib/pleroma/uploads
