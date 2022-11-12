@@ -37,6 +37,11 @@ zero_downtime_deploy() {
 COMMIT_HASH=$(curl 'https://akkoma.dev/api/v1/repos/AkkomaGang/akkoma/branches/stable' | jq -r '.commit.id')
 COMMIT_ID=${COMMIT_HASH:-stable}
 
+# check image already built
+docker pull teslamint/akkoma:${COMMIT_ID} || true
+docker pull teslamint/akkoma:stable || true
+docker pull teslamint/akkoma:latest || true
+
 docker buildx build --rm -t teslamint/akkoma:latest -t teslamint/akkoma:stable -t teslamint/akkoma:${COMMIT_ID} . --build-arg "PLEROMA_VER=$COMMIT_ID"
 zero_downtime_deploy
 docker-compose up -d
