@@ -40,7 +40,7 @@ RUN mkdir -p /etc/pleroma \
 USER pleroma
 
 COPY --from=builder --chown=pleroma /akkoma/release ${HOME}
-COPY --from=builder --chown=pleroma /akkoma/docker-entrypoint.sh ${HOME}/docker-entrypoint.sh
+COPY --chown=pleroma ./docker-entrypoint.sh ${HOME}/docker-entrypoint.sh
 
 # COPY ./config.exs /etc/pleroma/config.exs
 

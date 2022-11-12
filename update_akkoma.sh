@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -x
-set -e
+#set -e
 set -u
 set -o pipefail
 
@@ -19,7 +19,10 @@ zero_downtime_deploy() {
   # wait for new container to be available  
   new_container_id=$(docker ps -f name=$service_name -q | head -n1)
   new_container_ip=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $new_container_id)
-  curl --silent --include --retry 30 --retry-delay 1 --fail http://$new_container_ip:4000/ || exit 1
+  while : ; do
+    curl --silent --include --retry 30 --retry-delay 1 --fail http://$new_container_ip:4000/
+    [[ $? -eq 7 ]] || break
+  done
 
   # start routing requests to the new container (as well as the old)  
   reload_nginx
@@ -39,8 +42,6 @@ COMMIT_ID=${COMMIT_HASH:-stable}
 
 # check image already built
 docker pull teslamint/akkoma:${COMMIT_ID} || true
-docker pull teslamint/akkoma:stable || true
-docker pull teslamint/akkoma:latest || true
 
 docker buildx build --rm -t teslamint/akkoma:latest -t teslamint/akkoma:stable -t teslamint/akkoma:${COMMIT_ID} . --build-arg "PLEROMA_VER=$COMMIT_ID"
 zero_downtime_deploy
