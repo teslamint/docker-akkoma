@@ -51,10 +51,11 @@ docker-compose up -d
 if [ ! -d static/frontends ]; then
     mkdir -p static/frontends || chown 911:911 static/frontends
 fi
-docker-compose exec -T --index=1 web /pleroma/bin/pleroma_ctl frontend install pleroma-fe --ref stable
-docker-compose exec -T --index=1 web /pleroma/bin/pleroma_ctl frontend install admin-fe --ref stable
-docker-compose exec -T --index=1 web /pleroma/bin/pleroma_ctl frontend install mastodon-fe --ref akkoma
-docker-compose exec -T --index=1 web /pleroma/bin/pleroma_ctl frontend install fedibird-fe --ref akkoma
+SERVICE_INDEX=$(docker-compose ps web|tail -n1|awk '{print $1}'|sed -e 's/pleroma_web_//')
+docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install pleroma-fe --ref stable
+docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install admin-fe --ref stable
+docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install mastodon-fe --ref akkoma
+docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install fedibird-fe --ref akkoma
 
 IMAGES=$(docker images -f "dangling=true" -q)
 if [ "$IMAGES" != "" ]; then
