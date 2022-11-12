@@ -33,15 +33,6 @@ zero_downtime_deploy() {
 
   docker-compose up -d --no-deps --scale $service_name=1 --no-recreate $service_name
 
-  # install frontends
-  if [ ! -d static/frontends ]; then
-      mkdir -p static/frontends || chown 911:911 static/frontends
-  fi
-  docker-compose exec -T $service_name /pleroma/bin/pleroma_ctl frontend install pleroma-fe --ref stable
-  docker-compose exec -T $service_name /pleroma/bin/pleroma_ctl frontend install admin-fe --ref stable
-  docker-compose exec -T $service_name /pleroma/bin/pleroma_ctl frontend install mastodon-fe --ref akkoma
-  docker-compose exec -T $service_name /pleroma/bin/pleroma_ctl frontend install fedibird-fe --ref akkoma
-
   # stop routing requests to the old container  
   reload_nginx  
 }
@@ -55,6 +46,15 @@ docker pull teslamint/akkoma:${COMMIT_ID} || true
 docker buildx build --rm -t teslamint/akkoma:latest -t teslamint/akkoma:stable -t teslamint/akkoma:${COMMIT_ID} . --build-arg "PLEROMA_VER=$COMMIT_ID"
 zero_downtime_deploy
 docker-compose up -d
+
+# install frontends
+if [ ! -d static/frontends ]; then
+    mkdir -p static/frontends || chown 911:911 static/frontends
+fi
+docker-compose exec -T --index=1 web /pleroma/bin/pleroma_ctl frontend install pleroma-fe --ref stable
+docker-compose exec -T --index=1 web /pleroma/bin/pleroma_ctl frontend install admin-fe --ref stable
+docker-compose exec -T --index=1 web /pleroma/bin/pleroma_ctl frontend install mastodon-fe --ref akkoma
+docker-compose exec -T --index=1 web /pleroma/bin/pleroma_ctl frontend install fedibird-fe --ref akkoma
 
 IMAGES=$(docker images -f "dangling=true" -q)
 if [ "$IMAGES" != "" ]; then
