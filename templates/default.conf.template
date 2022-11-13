@@ -55,3 +55,16 @@ server {
         proxy_pass         http://phoenix;
     }
 }
+
+server {
+    server_name localhost;
+
+    listen 10080;
+    listen [::]:10080;
+
+    location /nginx_status {
+        stub_status on;
+        access_log off;
+        allow all;
+    }
+}
