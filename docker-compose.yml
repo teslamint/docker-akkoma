@@ -27,6 +27,8 @@ services:
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "pleroma"]
     restart: always
+    ports:
+      - "127.0.0.1:55432:5432"
     networks:
       - pleroma
     env_file:
