@@ -54,6 +54,18 @@ server {
         chunked_transfer_encoding on;
         proxy_pass         http://phoenix;
     }
+
+    location /pghero {
+        rewrite /pghero/(.*) /$1 break;
+        proxy_pass http://pghero:5432/;
+        proxy_redirect off;
+        proxy_set_header Host $host;
+        sub_filter_once off;
+        sub_filter 'href="/' 'href="/pghero/';
+        sub_filter "href='/" "href='/pghero/";
+        sub_filter 'src="/' 'src="/pghero/';
+        sub_filter 'action="/' 'action="/pghero/';
+    }
 }
 
 server {
