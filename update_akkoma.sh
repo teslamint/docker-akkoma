@@ -37,14 +37,16 @@ zero_downtime_deploy() {
   reload_nginx  
 }
 
-BRANCH=develop
+BRANCH=stable
 COMMIT_HASH=$(curl "https://akkoma.dev/api/v1/repos/AkkomaGang/akkoma/branches/$BRANCH" | jq -r '.commit.id')
 COMMIT_ID=${COMMIT_HASH:-$BRANCH}
 
 # check image already built
 docker pull teslamint/akkoma:${COMMIT_ID} || true
+docker pull teslamint/akkoma:${BRANCH} || true
+docker pull teslamint/akkoma:latest || true
 
-docker buildx build --rm -t teslamint/akkoma:latest -t teslamint/akkoma:${BRANCH} -t teslamint/akkoma:${COMMIT_ID} . --build-arg "PLEROMA_VER=$COMMIT_ID"
+# docker buildx build --rm -t teslamint/akkoma:latest -t teslamint/akkoma:${BRANCH} -t teslamint/akkoma:${COMMIT_ID} . --build-arg "PLEROMA_VER=$COMMIT_ID"
 zero_downtime_deploy
 docker-compose up -d
 
@@ -63,6 +65,6 @@ if [ "$IMAGES" != "" ]; then
     docker rmi --force $IMAGES
 fi
 docker system prune -f
-docker push teslamint/akkoma:latest
-docker push teslamint/akkoma:${BRANCH}
-docker push teslamint/akkoma:${COMMIT_ID}
+# docker push teslamint/akkoma:latest
+# docker push teslamint/akkoma:${BRANCH}
+# docker push teslamint/akkoma:${COMMIT_ID}
