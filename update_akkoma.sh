@@ -37,8 +37,8 @@ zero_downtime_deploy() {
   reload_nginx  
 }
 
-COMMIT_HASH=$(curl 'https://akkoma.dev/api/v1/repos/AkkomaGang/akkoma/branches/stable' | jq -r '.commit.id')
-COMMIT_ID=${COMMIT_HASH:-stable}
+COMMIT_HASH=$(curl 'https://akkoma.dev/api/v1/repos/AkkomaGang/akkoma/branches/develop' | jq -r '.commit.id')
+COMMIT_ID=${COMMIT_HASH:-develop}
 
 # check image already built
 docker pull teslamint/akkoma:${COMMIT_ID} || true
@@ -52,8 +52,8 @@ if [ ! -d static/frontends ]; then
     mkdir -p static/frontends || chown 911:911 static/frontends
 fi
 SERVICE_INDEX=$(docker-compose ps web|tail -n1|awk '{print $1}'|sed -e 's/pleroma_web_//')
-docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install pleroma-fe --ref stable
-docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install admin-fe --ref stable
+docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install pleroma-fe --ref develop
+docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install admin-fe --ref develop
 docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install mastodon-fe --ref akkoma
 docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install fedibird-fe --ref akkoma
 
