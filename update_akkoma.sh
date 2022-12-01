@@ -63,5 +63,5 @@ if [ "$IMAGES" != "" ]; then
 fi
 docker system prune -f
 docker push teslamint/akkoma:latest
-docker push teslamint/akkoma:stable
+docker push teslamint/akkoma:develop
 docker push teslamint/akkoma:${COMMIT_ID}
