@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "stable", "develop" ]
   pull_request:
-    branches: [ "main", "develop" ]
+    branches: [ "stable", "develop" ]
 
 env:
   BRANCH: ${{ github.ref_name }}
