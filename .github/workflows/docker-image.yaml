@@ -43,4 +43,4 @@ jobs:
         # List of build-time variables
         build-args: "PLEROMA_VER=${{ env.COMMIT_ID }}"
         platforms: "linux/amd64,linux/arm64"
-        tags: "teslamint/akkoma:latest,teslamint/akkoma:${{ env.BRANCH }},teslamint/akkoma:${{ env.COMMIT_ID }}"
+        tags: "teslamint/akkoma:${{ env.BRANCH }},teslamint/akkoma:${{ env.COMMIT_ID }}"
