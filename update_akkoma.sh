@@ -37,13 +37,14 @@ zero_downtime_deploy() {
   reload_nginx  
 }
 
-COMMIT_HASH=$(curl 'https://akkoma.dev/api/v1/repos/AkkomaGang/akkoma/branches/develop' | jq -r '.commit.id')
-COMMIT_ID=${COMMIT_HASH:-develop}
+BRANCH=develop
+COMMIT_HASH=$(curl "https://akkoma.dev/api/v1/repos/AkkomaGang/akkoma/branches/$BRANCH" | jq -r '.commit.id')
+COMMIT_ID=${COMMIT_HASH:-$BRANCH}
 
 # check image already built
 docker pull teslamint/akkoma:${COMMIT_ID} || true
 
-docker buildx build --rm -t teslamint/akkoma:latest -t teslamint/akkoma:develop -t teslamint/akkoma:${COMMIT_ID} . --build-arg "PLEROMA_VER=$COMMIT_ID"
+docker buildx build --rm -t teslamint/akkoma:latest -t teslamint/akkoma:${BRANCH} -t teslamint/akkoma:${COMMIT_ID} . --build-arg "PLEROMA_VER=$COMMIT_ID"
 zero_downtime_deploy
 docker-compose up -d
 
@@ -52,8 +53,8 @@ if [ ! -d static/frontends ]; then
     mkdir -p static/frontends || chown 911:911 static/frontends
 fi
 SERVICE_INDEX=$(docker-compose ps web|tail -n1|awk '{print $1}'|sed -e 's/pleroma_web_//')
-docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install pleroma-fe --ref develop
-docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install admin-fe --ref develop
+docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install pleroma-fe --ref ${BRANCH}
+docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install admin-fe --ref ${BRANCH}
 docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install mastodon-fe --ref akkoma
 docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install fedibird-fe --ref akkoma
 
@@ -63,5 +64,5 @@ if [ "$IMAGES" != "" ]; then
 fi
 docker system prune -f
 docker push teslamint/akkoma:latest
-docker push teslamint/akkoma:develop
+docker push teslamint/akkoma:${BRANCH}
 docker push teslamint/akkoma:${COMMIT_ID}
