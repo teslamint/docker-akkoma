@@ -38,7 +38,7 @@ services:
 
   web:
     build: .
-    image: teslamint/akkoma:stable
+    image: teslamint/akkoma:develop
     hostname: web
     healthcheck:
       test:
