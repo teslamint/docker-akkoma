@@ -7,7 +7,7 @@ on:
     branches: [ "main", "develop" ]
 
 env:
-  BRANCH: "$GITHUB_REF_NAME"
+  BRANCH: ${{ github.ref_name }}
 
 jobs:
   build:
@@ -36,4 +36,4 @@ jobs:
         # List of build-time variables
         build-args: "PLEROMA_VER=$COMMIT_ID"
         platforms: "linux/amd64,linux/arm64"
-        tags: "teslamint/akkoma:latest,teslamint/akkoma:${{ env.BRANCH }},teslamint/akkoma:$COMMIT_ID"
+        tags: "teslamint/akkoma:latest,teslamint/akkoma:${{ env.BRANCH }},teslamint/akkoma:${{ env.COMMIT_ID }}"
