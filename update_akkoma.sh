@@ -43,7 +43,7 @@ COMMIT_ID=${COMMIT_HASH:-develop}
 # check image already built
 docker pull teslamint/akkoma:${COMMIT_ID} || true
 
-docker buildx build --rm -t teslamint/akkoma:latest -t teslamint/akkoma:stable -t teslamint/akkoma:${COMMIT_ID} . --build-arg "PLEROMA_VER=$COMMIT_ID"
+docker buildx build --rm -t teslamint/akkoma:latest -t teslamint/akkoma:develop -t teslamint/akkoma:${COMMIT_ID} . --build-arg "PLEROMA_VER=$COMMIT_ID"
 zero_downtime_deploy
 docker-compose up -d
 
