@@ -3,6 +3,9 @@ name: Docker Image CI
 on:
   push:
     branches: [ "stable", "develop" ]
+    tags:
+      - stable-*
+      - develop-*
   pull_request:
     branches: [ "stable", "develop" ]
 
