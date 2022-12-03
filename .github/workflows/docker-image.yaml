@@ -23,14 +23,14 @@ jobs:
       run: echo "COMMIT_ID=$(curl "https://akkoma.dev/api/v1/repos/AkkomaGang/akkoma/branches/${{ env.BRANCH }}" | jq -r '.commit.id')" >> $GITHUB_ENV
 
     - name: set commit id from tag (stable)
-      if: ${{ contains('stable-', github.ref_name) }}
+      if: ${{ startsWith(github.ref_name, 'stable-') }}
       run: |
         echo "COMMIT_ID=${GITHUB_REF_NAME#stable-}" >> $GITHUB_ENV
         BRANCH=${GITHUB_REF_NAME#${{ env.COMMIT_ID }}}
         echo "BRANCH=$BRANCH" >> $GITHUB_ENV
 
     - name: set commit id from tag (develop)
-      if: ${{ contains('develop-', github.ref_name) }}
+      if: ${{ startsWith(github.ref_name, 'develop-') }}
       run: |
         echo "COMMIT_ID=${GITHUB_REF_NAME#develop-}" >> $GITHUB_ENV
         BRANCH=${GITHUB_REF_NAME#${{ env.COMMIT_ID }}}
