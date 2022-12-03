@@ -9,9 +9,6 @@ on:
   pull_request:
     branches: [ "stable", "develop" ]
 
-env:
-  BRANCH: ${{ github.ref_name }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,16 +16,25 @@ jobs:
     - uses: actions/checkout@v3
     
     - name: get latest commit id
-      if: ${{ env.BRANCH == 'develop' || env.BRANCH == 'stable' }}
-      run: echo "COMMIT_ID=$(curl "https://akkoma.dev/api/v1/repos/AkkomaGang/akkoma/branches/${{ env.BRANCH }}" | jq -r '.commit.id')" >> $GITHUB_ENV
+      if: ${{ github.ref_name == 'develop' || github.ref_name == 'stable' }}
+      run: |
+        BRANCH=${GITHUB_REF_NAME}
+        echo "COMMIT_ID=$(curl "https://akkoma.dev/api/v1/repos/AkkomaGang/akkoma/branches/${BRANCH}" | jq -r '.commit.id')" >> $GITHUB_ENV
+        echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
 
     - name: set commit id from tag (stable)
-      if: ${{ contains('stable-', github.ref_name) }}
-      run: echo "COMMIT_ID=${GITHUB_REF_NAME#stable-}" >> $GITHUB_ENV
+      if: ${{ startsWith(github.ref_name, 'stable-') }}
+      run: |
+        echo "COMMIT_ID=${GITHUB_REF_NAME#stable-}" >> $GITHUB_ENV
+        BRANCH=${GITHUB_REF_NAME#${{ env.COMMIT_ID }}}
+        echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
 
     - name: set commit id from tag (develop)
-      if: ${{ contains('develop-', github.ref_name) }}
-      run: echo "COMMIT_ID=${GITHUB_REF_NAME#develop-}" >> $GITHUB_ENV
+      if: ${{ startsWith(github.ref_name, 'develop-') }}
+      run: |
+        echo "COMMIT_ID=${GITHUB_REF_NAME#develop-}" >> $GITHUB_ENV
+        BRANCH=${GITHUB_REF_NAME#${{ env.COMMIT_ID }}}
+        echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
