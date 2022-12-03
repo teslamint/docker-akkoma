@@ -9,9 +9,6 @@ on:
   pull_request:
     branches: [ "stable", "develop" ]
 
-env:
-  BRANCH: ${{ github.ref_name }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
