@@ -27,7 +27,7 @@ jobs:
       run: |
         COMMIT_ID=${GITHUB_REF_NAME#stable-}
         echo "COMMIT_ID=${COMMIT_ID}" >> $GITHUB_ENV
-        BRANCH=${GITHUB_REF_NAME#${COMMIT_ID}}
+        BRANCH="$(echo $GITHUB_REF_NAME | sed s,-${COMMIT_ID},,)"
         echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
 
     - name: set commit id from tag (develop)
@@ -35,7 +35,7 @@ jobs:
       run: |
         COMMIT_ID=${GITHUB_REF_NAME#develop-}
         echo "COMMIT_ID=$COMMIT_ID" >> $GITHUB_ENV
-        BRANCH=${GITHUB_REF_NAME#${COMMIT_ID}}
+        BRANCH="$(echo $GITHUB_REF_NAME | sed s,-${COMMIT_ID},,)"
         echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
 
     - name: Set up QEMU
