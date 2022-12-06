@@ -7,18 +7,18 @@ ARG DATA=/var/lib/pleroma
 
 RUN apk add git gcc g++ musl-dev make cmake file-dev ffmpeg imagemagick exiftool patch
 
-RUN git clone -b develop --depth=10 https://akkoma.dev/AkkomaGang/akkoma.git && \
-    cd akkoma && git checkout "${PLEROMA_VER}"
+RUN git clone -b develop --depth=10 https://akkoma.dev/AkkomaGang/akkoma.git
 
-RUN cd akkoma && wget -O- https://gist.githubusercontent.com/teslamint/1ca70d83197409be662966e8f1fea257/raw/35c7e2d85e7e1d08f45a67afcd1319c70f7b366b/patch-1.patch | patch -p1 && \
-	cd ..
+WORKDIR /akkoma
 
-RUN cd akkoma && echo "import Mix.Config" > config/prod.secret.exs && \
-	mix local.hex --force && \
-	mix local.rebar --force && \
-	mix deps.get --only prod && \
-	mkdir release && \
-	mix release --path release
+RUN git checkout "${PLEROMA_VER}"
+
+RUN wget -O- https://gist.githubusercontent.com/teslamint/1ca70d83197409be662966e8f1fea257/raw/35c7e2d85e7e1d08f45a67afcd1319c70f7b366b/patch-1.patch | patch -p1
+
+RUN echo "import Mix.Config" > config/prod.secret.exs
+RUN mix local.hex --force && mix local.rebar --force
+RUN	mix deps.get --only ${MIX_ENV}
+RUN mkdir release && mix release --path release
 
 FROM --platform=$TARGETPLATFORM alpine:3.16.2 as final
 
