@@ -25,15 +25,17 @@ jobs:
     - name: set commit id from tag (stable)
       if: ${{ startsWith(github.ref_name, 'stable-') }}
       run: |
-        echo "COMMIT_ID=${GITHUB_REF_NAME#stable-}" >> $GITHUB_ENV
-        BRANCH=${GITHUB_REF_NAME#${{ env.COMMIT_ID }}}
+        COMMIT_ID=${GITHUB_REF_NAME#stable-}
+        echo "COMMIT_ID=${COMMIT_ID}" >> $GITHUB_ENV
+        BRANCH=${GITHUB_REF_NAME#${COMMIT_ID}}
         echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
 
     - name: set commit id from tag (develop)
       if: ${{ startsWith(github.ref_name, 'develop-') }}
       run: |
-        echo "COMMIT_ID=${GITHUB_REF_NAME#develop-}" >> $GITHUB_ENV
-        BRANCH=${GITHUB_REF_NAME#${{ env.COMMIT_ID }}}
+        COMMIT_ID=${GITHUB_REF_NAME#develop-}
+        echo "COMMIT_ID=$COMMIT_ID" >> $GITHUB_ENV
+        BRANCH=${GITHUB_REF_NAME#${COMMIT_ID}}
         echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
 
     - name: Set up QEMU
