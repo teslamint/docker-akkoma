@@ -20,7 +20,7 @@ RUN mix local.hex --force && mix local.rebar --force
 RUN	mix deps.get --only ${MIX_ENV}
 RUN mkdir release && mix release --path release
 
-FROM --platform=$TARGETPLATFORM alpine:3.16.2 as final
+FROM --platform=$TARGETPLATFORM alpine:3.17.0 as final
 
 ENV UID=911 GID=911
 
