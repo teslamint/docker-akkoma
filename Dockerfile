@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM elixir:1.13.4-alpine as builder
+FROM --platform=$TARGETPLATFORM elixir:1.14.2-alpine as builder
 
 ENV MIX_ENV=prod
 
