@@ -8,6 +8,8 @@ on:
       - develop-*
   pull_request:
     branches: [ "stable", "develop" ]
+  schedule:
+    cron: "0 */3 * * *"
 
 jobs:
   build:
