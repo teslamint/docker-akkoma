@@ -19,6 +19,7 @@ services:
       - nginx_pid:/var/run
     depends_on:
       - web
+      - pghero
 
   postgres:
     image: postgres:12-alpine
