@@ -43,7 +43,7 @@ BRANCH=develop
 docker pull teslamint/akkoma:${BRANCH}
 
 zero_downtime_deploy
-docker-compose up -d
+# docker-compose up -d
 
 # install frontends
 if [ ! -d static/frontends ]; then
