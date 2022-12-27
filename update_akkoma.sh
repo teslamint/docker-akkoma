@@ -43,13 +43,13 @@ BRANCH=stable
 docker pull teslamint/akkoma:${BRANCH}
 
 zero_downtime_deploy
-docker-compose up -d
+# docker-compose up -d
 
 # install frontends
 if [ ! -d static/frontends ]; then
     mkdir -p static/frontends || chown 911:911 static/frontends
 fi
-SERVICE_INDEX=$(docker-compose ps web|tail -n1|awk '{print $1}'|sed -e 's/pleroma_web_//')
+SERVICE_INDEX=$(docker-compose ps web|tail -n1|awk '{print $1}'|sed -e s,pleroma-web-,,)
 docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install pleroma-fe --ref ${BRANCH}
 docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install admin-fe --ref ${BRANCH}
 docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install mastodon-fe --ref akkoma

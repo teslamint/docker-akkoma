@@ -15,6 +15,10 @@ upstream phoenix {
     server web:4000 max_fails=5 fail_timeout=60s;
 }
 
+upstream pghero {
+    server pghero:8080 max_fails=5 fail_timeout=60s;
+}
+
 server {
     server_name    localhost;
 
@@ -57,7 +61,7 @@ server {
 
     location /pghero {
         rewrite /pghero/(.*) /$1 break;
-        proxy_pass http://pghero:8080/;
+        proxy_pass http://pghero;
         proxy_redirect off;
         proxy_set_header Host $host;
         sub_filter_once off;
