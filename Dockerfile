@@ -2,12 +2,13 @@ FROM --platform=$TARGETPLATFORM elixir:1.14.2-alpine as builder
 
 ENV MIX_ENV=prod
 
-ARG PLEROMA_VER=stable
+ARG PLEROMA_VER=v3.5.0
+ARG BRANCH=stable
 ARG DATA=/var/lib/pleroma
 
 RUN apk add git gcc g++ musl-dev make cmake file-dev ffmpeg imagemagick exiftool patch
 
-RUN git clone -b stable --depth=10 https://akkoma.dev/AkkomaGang/akkoma.git
+RUN git clone -b "${BRANCH}" --depth=10 https://akkoma.dev/AkkomaGang/akkoma.git
 
 WORKDIR /akkoma
 
