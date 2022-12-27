@@ -3,11 +3,12 @@ FROM --platform=$TARGETPLATFORM hexpm/elixir:1.14.2-erlang-25.0.4-alpine-3.17.0 
 ENV MIX_ENV=prod
 
 ARG PLEROMA_VER=develop
+ARG BRANCH=develop
 ARG DATA=/var/lib/pleroma
 
 RUN apk add git gcc g++ musl-dev make cmake file-dev ffmpeg imagemagick exiftool patch
 
-RUN git clone -b develop --depth=10 https://akkoma.dev/AkkomaGang/akkoma.git
+RUN git clone -b "${BRANCH}" --depth=10 https://akkoma.dev/AkkomaGang/akkoma.git
 
 WORKDIR /akkoma
 
