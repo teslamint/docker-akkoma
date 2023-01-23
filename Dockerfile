@@ -14,6 +14,7 @@ WORKDIR /akkoma
 
 RUN git checkout "${PLEROMA_VER}"
 
+# Comment out below line if you don't use Cloudflare R2
 RUN wget -O- https://gist.githubusercontent.com/teslamint/1ca70d83197409be662966e8f1fea257/raw/35c7e2d85e7e1d08f45a67afcd1319c70f7b366b/patch-1.patch | patch -p1
 
 RUN echo "import Mix.Config" > config/prod.secret.exs
