@@ -64,6 +64,9 @@ config :pleroma, :database, rum_enabled: false
 config :pleroma, :instance, static_dir: "/var/lib/pleroma/static"
 config :pleroma, Pleroma.Uploaders.Local, uploads: "/var/lib/pleroma/uploads"
 
+config :pleroma, Pleroma.Search.Meilisearch,
+  initial_indexing_chunk_size: 1000
+
 # We can't store the secrets in this file, since this is baked into the docker image
 if not File.exists?("/var/lib/pleroma/secret.exs") do
   secret = :crypto.strong_rand_bytes(64) |> Base.encode64() |> binary_part(0, 64)
@@ -89,8 +92,6 @@ if not File.exists?("/var/lib/pleroma/secret.exs") do
 
   File.write("/var/lib/pleroma/secret.exs", secret_file)
 end
-
-import_config("/var/lib/pleroma/secret.exs")
 
 # For additional user config
 if File.exists?("/var/lib/pleroma/config.exs"),
