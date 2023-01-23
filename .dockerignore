@@ -1,5 +1,11 @@
 .env.*
+!.env.*.sample
 nginx.conf
 static/
+!static/.gitkeep
 postgres/
+!postgres/.gitkeep
 uploads/
+!uploads/.gitkeep
+meili_data/
+!meili_data/.gitkeep
