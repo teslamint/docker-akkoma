@@ -60,7 +60,7 @@ config :web_push_encryption, :vapid_details, subject: "mailto:#{System.get_env("
 # Configurable from database
 config :pleroma, configurable_from_database: true
 
-config :pleroma, :database, rum_enabled: true
+config :pleroma, :database, rum_enabled: false
 config :pleroma, :instance, static_dir: "/var/lib/pleroma/static"
 config :pleroma, Pleroma.Uploaders.Local, uploads: "/var/lib/pleroma/uploads"
 
