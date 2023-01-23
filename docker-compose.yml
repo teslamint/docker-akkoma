@@ -65,7 +65,6 @@ services:
       - ./uploads:/var/lib/pleroma/uploads
       - ./static:/var/lib/pleroma/static
       - ./config.exs:/etc/pleroma/config.exs:ro
-      # - ./config-override.exs:/var/lib/pleroma/config.exs:ro
     env_file:
       - .env
     depends_on:
