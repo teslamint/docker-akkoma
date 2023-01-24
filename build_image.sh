@@ -13,4 +13,4 @@ docker pull teslamint/akkoma:${BRANCH} || true
 docker pull teslamint/akkoma:${COMMIT_ID} || true
 
 docker buildx build --rm -t teslamint/akkoma:latest -t teslamint/akkoma:${BRANCH} -t teslamint/akkoma:${COMMIT_ID} . \
-    --build-arg "BRANCH=$BRANCH" --build-arg "PLEROMA_VER=$COMMIT_ID" --platform=linux/amd64 --push
+    --build-arg "BRANCH=$BRANCH" --build-arg "PLEROMA_VER=$COMMIT_ID" --platform=linux/amd64,linux/arm64 --push
