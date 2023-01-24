@@ -89,9 +89,11 @@ services:
       - pleroma
     depends_on:
       - nginx
+    env_file:
+      - .env.cloudflared
     volumes:
       - ./cloudflared:/etc/cloudflared
-    entrypoint: ["cloudflared", "--config", "/etc/cloudflared/config.yml", "--no-autoupdate", "tunnel", "run"]
+    entrypoint: ["cloudflared", "--no-autoupdate", "tunnel", "run", "--token", "${CLOUDFLARED_TOKEN}"]
 
 volumes:
   nginx_cache:
