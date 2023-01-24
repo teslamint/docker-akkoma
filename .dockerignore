@@ -11,3 +11,5 @@ meili_data/
 !meili_data/.gitkeep
 pleroma/
 !pleroma/.gitkeep
+cloudflared/
+!cloudflared/.gitkeep

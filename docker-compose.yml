@@ -82,6 +82,16 @@ services:
       - .env.pghero
     depends_on:
       - postgres
+  
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    networks:
+      - pleroma
+    depends_on:
+      - nginx
+    volumes:
+      - ./cloudflared:/etc/cloudflared
+    entrypoint: ["cloudflared", "--config", "/etc/cloudflared/config.yml", "--no-autoupdate", "tunnel", "run"]
 
 volumes:
   nginx_cache:
