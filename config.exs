@@ -94,4 +94,6 @@ if not File.exists?("/var/lib/pleroma/secret.exs") do
   File.write("/var/lib/pleroma/secret.exs", secret_file)
 end
 
-import_config("/var/lib/pleroma/config.exs")
+if File.exists?("/var/lib/pleroma/config.exs") do
+  import_config("/var/lib/pleroma/config.exs")
+end
