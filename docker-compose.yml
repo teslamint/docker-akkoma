@@ -49,7 +49,6 @@ services:
       - ./meili_data:/meili_data
 
   web:
-    build: .
     image: teslamint/akkoma:develop
     hostname: web
     healthcheck:
