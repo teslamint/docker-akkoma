@@ -1,15 +1,7 @@
-.env.*
-!.env.*.sample
-nginx.conf
+.env*
 static/
-!static/.gitkeep
 postgres/
-!postgres/.gitkeep
 uploads/
-!uploads/.gitkeep
 meili_data/
-!meili_data/.gitkeep
 pleroma/
-!pleroma/.gitkeep
 cloudflared/
-!cloudflared/.gitkeep
