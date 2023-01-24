@@ -9,3 +9,5 @@ uploads/
 !uploads/.gitkeep
 meili_data/
 !meili_data/.gitkeep
+pleroma/
+!pleroma/.gitkeep
