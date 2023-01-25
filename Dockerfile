@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM hexpm/elixir:1.14.3-erlang-25.1.2.1-alpine-3.17.0 as builder
+FROM --platform=$TARGETPLATFORM hexpm/elixir:1.14.3-erlang-25.0.4-alpine-3.17.0 as builder
 
 ENV MIX_ENV=prod
 
