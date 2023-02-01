@@ -18,9 +18,9 @@ RUN git checkout "${PLEROMA_VER}"
 RUN wget -O- https://gist.githubusercontent.com/teslamint/1ca70d83197409be662966e8f1fea257/raw/35c7e2d85e7e1d08f45a67afcd1319c70f7b366b/patch-1.patch | patch -p1
 
 RUN echo "import Mix.Config" > config/prod.secret.exs
-RUN --mount=type=cache,target=/root/.mix mix local.hex --force && mix local.rebar --force
-RUN --mount=type=cache,target=/root/.mix mix deps.get --only ${MIX_ENV}
-RUN --mount=type=cache,target=/root/.mix mkdir release && mix release --path release
+RUN mix local.hex --force && mix local.rebar --force
+RUN mix deps.get --only ${MIX_ENV}
+RUN mkdir release && mix release --path release
 
 FROM --platform=$TARGETPLATFORM alpine:3.15.1 as final
 
