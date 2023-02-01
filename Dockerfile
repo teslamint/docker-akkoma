@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM hexpm/elixir:1.14.3-erlang-25.1.2.1-alpine-3.17.0 as builder
+FROM --platform=$TARGETPLATFORM ghcr.io/emqx/emqx-builder/5.0-27:1.13.4-25.1.2-2-alpine3.15.1 as builder
 
 ENV MIX_ENV=prod
 
@@ -22,7 +22,7 @@ RUN --mount=type=cache,target=/root/.mix mix local.hex --force && mix local.reba
 RUN --mount=type=cache,target=/root/.mix mix deps.get --only ${MIX_ENV}
 RUN --mount=type=cache,target=/root/.mix mkdir release && mix release --path release
 
-FROM --platform=$TARGETPLATFORM alpine:3.17.1 as final
+FROM --platform=$TARGETPLATFORM alpine:3.15.1 as final
 
 ENV UID=911 GID=911
 
