@@ -19,10 +19,7 @@ zero_downtime_deploy() {
   # wait for new container to be available  
   new_container_id=$(docker ps -f name=$service_name -q | head -n1)
   new_container_ip=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $new_container_id)
-  while : ; do
-    curl --silent --include --retry-connrefused --retry 30 --retry-delay 1 --fail http://$new_container_ip:4000/api/v1/pleroma/healthcheck
-    [[ $? -eq 0 ]] && break
-  done
+  curl --silent --include --retry-connrefused --retry 30 --retry-delay 1 --fail http://$new_container_ip:4000/api/v1/pleroma/healthcheck || exit 1
 
   # start routing requests to the new container (as well as the old)  
   reload_nginx
