@@ -51,6 +51,8 @@ services:
   web:
     image: teslamint/akkoma:develop
     hostname: web
+    ports:
+      - "127.0.0.1:4000:4000"
     healthcheck:
       test:
         [
