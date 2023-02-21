@@ -5,6 +5,12 @@ services:
     image: nginx:1.21-alpine
     hostname: nginx
     container_name: pleroma_nginx
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -q --spider --proxy=off http://localhost/api/v1/pleroma/healthcheck || exit 1",
+        ]
     restart: always
     networks:
       - pleroma
