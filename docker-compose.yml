@@ -18,8 +18,10 @@ services:
       - nginx_cache:/var/cache/nginx
       - nginx_pid:/var/run
     depends_on:
-      - web
-      - pghero
+      web:
+        condition: service_healthy
+      pghero:
+        condition: service_healthy
 
   postgres:
     image: postgres:12-alpine
@@ -68,8 +70,10 @@ services:
     env_file:
       - .env.pleroma
     depends_on:
-      - postgres
-      - meilisearch
+      postgres:
+        condition: service_healthy
+      meilisearch:
+        condition: service_healthy
 
   pghero:
     image: ankane/pghero
@@ -80,14 +84,16 @@ services:
     env_file:
       - .env.pghero
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
   
   cloudflared:
     image: cloudflare/cloudflared:latest
     networks:
       - pleroma
     depends_on:
-      - nginx
+      nginx:
+        condition: service_healthy
     env_file:
       - .env.cloudflared
     volumes:
