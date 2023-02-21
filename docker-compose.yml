@@ -73,7 +73,7 @@ services:
       postgres:
         condition: service_healthy
       meilisearch:
-        condition: service_completed_successfully
+        condition: service_started
 
   pghero:
     image: ankane/pghero
