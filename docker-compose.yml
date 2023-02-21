@@ -21,7 +21,7 @@ services:
       web:
         condition: service_healthy
       pghero:
-        condition: service_healthy
+        condition: service_started
 
   postgres:
     image: postgres:12-alpine
