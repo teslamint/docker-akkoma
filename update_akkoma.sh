@@ -4,8 +4,13 @@ set -x
 set -u
 set -o pipefail
 
+DOCKER_COMPOSE=$(which docker-compose)
+if [[ "z$DOCKER_COMPOSE" = "z" ]]; then
+  DOCKER_COMPOSE="docker compose"
+fi
+
 reload_nginx() {  
-  docker-compose exec -T nginx /usr/sbin/nginx -s reload  
+  $DOCKER_COMPOSE exec -T nginx /usr/sbin/nginx -s reload  
 }
 
 zero_downtime_deploy() {
@@ -14,7 +19,7 @@ zero_downtime_deploy() {
 
   # bring a new container online, running new code  
   # (nginx continues routing to the old container only)  
-  docker-compose up -d --no-deps --scale $service_name=2 --no-recreate $service_name
+  $DOCKER_COMPOSE up -d --no-deps --scale $service_name=2 --no-recreate $service_name
 
   # wait for new container to be available  
   new_container_id=$(docker ps -f name=$service_name -q | head -n1)
@@ -28,7 +33,7 @@ zero_downtime_deploy() {
   docker stop $old_container_id
   docker rm $old_container_id
 
-  docker-compose up -d --no-deps --scale $service_name=1 --no-recreate $service_name
+  $DOCKER_COMPOSE up -d --no-deps --scale $service_name=1 --no-recreate $service_name
 
   # stop routing requests to the old container  
   reload_nginx  
@@ -40,17 +45,17 @@ BRANCH=develop
 docker pull teslamint/akkoma:${BRANCH}
 
 zero_downtime_deploy
-# docker-compose up -d
+# $DOCKER_COMPOSE up -d
 
 # install frontends
 if [ ! -d pleroma/static/frontends ]; then
     mkdir -p pleroma/static/frontends || chown 911:911 pleroma/static/frontends
 fi
-SERVICE_INDEX=$(docker-compose ps web|tail -n1|awk '{print $1}'|sed -e s,pleroma-web-,,)
-docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install pleroma-fe --ref ${BRANCH}
-docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install admin-fe --ref ${BRANCH}
-docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install mastodon-fe --ref akkoma
-docker-compose exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install fedibird-fe --ref akkoma
+SERVICE_INDEX=$($DOCKER_COMPOSE ps web|tail -n1|awk '{print $1}'|sed -e s,pleroma-web-,,)
+$DOCKER_COMPOSE exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install pleroma-fe --ref ${BRANCH}
+$DOCKER_COMPOSE exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install admin-fe --ref ${BRANCH}
+$DOCKER_COMPOSE exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install mastodon-fe --ref akkoma
+$DOCKER_COMPOSE exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install fedibird-fe --ref akkoma
 
 IMAGES=$(docker images -f "dangling=true" -q)
 if [ "$IMAGES" != "" ]; then
