@@ -24,7 +24,7 @@ reload_nginx
 if [ ! -d pleroma/static/frontends ]; then
     mkdir -p pleroma/static/frontends
 fi
-SERVICE_INDEX=$($DOCKER_COMPOSE ps web|tail -n1|awk '{print $1}'|sed -e s,pleroma-web-,,)
+SERVICE_INDEX=$($DOCKER_COMPOSE ps web|tail -n1|awk '{print $1}'|sed -e s,akkoma-web-,,)
 $DOCKER_COMPOSE exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install pleroma-fe --ref ${BRANCH}
 $DOCKER_COMPOSE exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install admin-fe --ref ${BRANCH}
 $DOCKER_COMPOSE exec -T --index=$SERVICE_INDEX web /pleroma/bin/pleroma_ctl frontend install mastodon-fe --ref akkoma
