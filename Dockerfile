@@ -24,8 +24,8 @@ RUN mkdir release && mix release --path release
 
 FROM --platform=$TARGETPLATFORM alpine:3.15.1 as final
 
-ENV UID=911 GID=911
-
+ARG UID=911
+ARG GID=911
 ARG HOME=/pleroma
 ARG DATA=/var/lib/pleroma
 
