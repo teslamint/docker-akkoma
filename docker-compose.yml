@@ -2,16 +2,14 @@ version: '3.3'
 
 services:
   nginx:
-    image: nginx:1.21-alpine
-    hostname: nginx
-    container_name: pleroma_nginx
+    image: nginx:1.22-alpine
     healthcheck:
       test:
         [
           "CMD-SHELL",
           "wget -q --spider --proxy=off http://localhost/api/v1/pleroma/healthcheck || exit 1",
         ]
-    restart: always
+    restart: unless_stopped
     networks:
       - pleroma
     environment:
@@ -32,10 +30,9 @@ services:
   postgres:
     image: postgres:12-alpine
     hostname: db
-    container_name: pleroma_postgres
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "pleroma"]
-    restart: always
+    restart: unless_stopped
     ports:
       - "127.0.0.1:55432:5432"
     networks:
@@ -58,14 +55,13 @@ services:
 
   web:
     image: teslamint/akkoma:develop
-    hostname: web
     healthcheck:
       test:
         [
           "CMD-SHELL",
           "wget -q --spider --proxy=off http://localhost:4000/api/v1/pleroma/healthcheck || exit 1",
         ]
-    restart: always
+    restart: unless_stopped
     networks:
       - pleroma
     volumes:
@@ -81,8 +77,6 @@ services:
 
   pghero:
     image: ankane/pghero
-    hostname: pghero
-    container_name: pleroma_pghero
     networks:
       - pleroma
     env_file:
