@@ -9,7 +9,7 @@ services:
           "CMD-SHELL",
           "wget -q --spider --proxy=off http://localhost/api/v1/pleroma/healthcheck || exit 1",
         ]
-    restart: unless_stopped
+    restart: unless-stopped
     networks:
       - pleroma
     environment:
@@ -32,7 +32,7 @@ services:
     hostname: db
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "pleroma"]
-    restart: unless_stopped
+    restart: unless-stopped
     ports:
       - "127.0.0.1:55432:5432"
     networks:
@@ -61,7 +61,7 @@ services:
           "CMD-SHELL",
           "wget -q --spider --proxy=off http://localhost:4000/api/v1/pleroma/healthcheck || exit 1",
         ]
-    restart: unless_stopped
+    restart: unless-stopped
     networks:
       - pleroma
     volumes:
