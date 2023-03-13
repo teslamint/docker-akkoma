@@ -86,7 +86,7 @@ services:
         condition: service_healthy
   
   cloudflared:
-    image: cloudflare/cloudflared:2022.3.4
+    image: cloudflare/cloudflared:latest
     networks:
       - pleroma
     depends_on:
