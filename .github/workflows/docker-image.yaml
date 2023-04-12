@@ -44,7 +44,7 @@ jobs:
       if: github.event_name == 'pull_request'
       run: |
         COMMIT_ID=${{ github.event.pull_request.head.sha }}
-        echo "COMMIT_ID=${COMMIT_ID}" >> $GITHUB_ENV
+        echo "COMMIT_ID=develop" >> $GITHUB_ENV
         BRANCH="$(echo ${GITHUB_REF_NAME} | sed s,/,-,)"
         echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
 
