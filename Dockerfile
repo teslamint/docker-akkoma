@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM ghcr.io/emqx/emqx-builder/5.0-27:1.13.4-25.1.2-2-alpine3.15.1 as builder
+FROM --platform=$TARGETPLATFORM hexpm/elixir:1.14.4-erlang-25.3-alpine-3.17.2 as builder
 
 ENV MIX_ENV=prod
 
@@ -22,7 +22,7 @@ RUN mix local.hex --force && mix local.rebar --force
 RUN mix deps.get --only ${MIX_ENV}
 RUN mkdir release && mix release --path release
 
-FROM --platform=$TARGETPLATFORM alpine:3.15.1 as final
+FROM --platform=$TARGETPLATFORM alpine:3.17.2 as final
 
 ARG UID=911
 ARG GID=911
