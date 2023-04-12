@@ -45,7 +45,7 @@ jobs:
       run: |
         COMMIT_ID=${{ github.event.pull_request.head.sha }}
         echo "COMMIT_ID=${COMMIT_ID}" >> $GITHUB_ENV
-        BRANCH="$(echo ${GITHUB_HEAD_REF} | sed s,-${COMMIT_ID},,)"
+        BRANCH="$(echo ${GITHUB_HEAD_REF_NAME} | sed s,-${COMMIT_ID},,)"
         echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
 
     - name: Set up Docker Buildx
