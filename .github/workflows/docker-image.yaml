@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: get latest commit id
       if: ${{ github.ref_name == 'develop' || github.ref_name == 'stable' }}
       run: |
@@ -69,7 +69,7 @@ jobs:
       with:
         push: ${{ github.event_name != 'pull_request' }}
         # List of build-time variables
-        build-args: "PLEROMA_VER=${{ env.COMMIT_ID }}"
+        build-args: "PLEROMA_VER=${{ env.COMMIT_ID }},BRANCH=${{ env.BRANCH }}"
         platforms: "linux/amd64"
         tags: "teslamint/akkoma:${{ env.BRANCH }},teslamint/akkoma:${{ env.COMMIT_ID }}"
         cache-from: type=gha
