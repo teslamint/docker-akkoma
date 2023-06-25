@@ -20,9 +20,9 @@ upstream pghero {
 }
 
 server {
-    server_name    localhost;
+    server_name    _;
 
-    listen         ${NGINX_PORT};
+    listen         ${NGINX_PORT} default_server;
     listen         [::]:${NGINX_PORT};
 
     gzip_vary on;
