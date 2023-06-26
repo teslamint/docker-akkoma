@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM hexpm/elixir:1.14.5-erlang-25.3-alpine-3.17.2 as builder
+FROM --platform=$TARGETPLATFORM hexpm/elixir:1.14.5-erlang-25.3-alpine-3.17.2 AS builder
 
 ENV MIX_ENV=prod
 
@@ -22,7 +22,7 @@ RUN mix local.hex --force && mix local.rebar --force
 RUN mix deps.get --only ${MIX_ENV}
 RUN mkdir release && mix release --path release
 
-FROM --platform=$TARGETPLATFORM alpine:3.17.3 as final
+FROM --platform=$TARGETPLATFORM alpine:3.17.3 AS final
 
 ARG UID=911
 ARG GID=911
