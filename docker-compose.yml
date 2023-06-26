@@ -59,7 +59,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "wget -q --spider --proxy=off http://localhost:4000/api/v1/pleroma/healthcheck || exit 1",
+          "wget -q --spider --proxy=off http://127.0.0.1:4000/api/v1/pleroma/healthcheck || exit 1",
         ]
     restart: unless-stopped
     networks:
