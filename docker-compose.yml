@@ -104,3 +104,5 @@ volumes:
 
 networks:
   pleroma:
+    name: pleroma_v6
+    external: true
