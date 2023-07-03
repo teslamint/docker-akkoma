@@ -48,10 +48,6 @@ config :pleroma, :frontends,
   mastodon: %{
     "name" => "mastodon-fe",
     "ref" => "akkoma"
-  },
-  fedibird: %{
-    "name" => "fedibird-fe",
-    "ref" => "akkoma"
   }
 
 # Configure web push notifications
