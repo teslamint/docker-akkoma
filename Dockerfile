@@ -1,4 +1,8 @@
-FROM --platform=$TARGETPLATFORM hexpm/elixir:1.14.5-erlang-25.3-alpine-3.17.2 AS builder
+ARG OTP_VERSION='25.3.2.3'
+ARG ELIXIR_VERSION='1.15.2'
+ARG ALPINE_VERSION='3.18.2'
+
+FROM --platform=$TARGETPLATFORM hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-alpine-${ALPINE_VERSION} AS builder
 
 ENV MIX_ENV=prod
 
@@ -6,7 +10,7 @@ ARG PLEROMA_VER=develop
 ARG BRANCH=develop
 ARG DATA=/var/lib/pleroma
 
-RUN apk add git gcc g++ musl-dev make cmake file-dev ffmpeg imagemagick exiftool patch
+RUN apk -U add --no-cache git gcc g++ musl-dev make cmake file-dev ffmpeg imagemagick exiftool patch
 
 RUN git clone -b "${BRANCH}" --depth=10 https://akkoma.dev/AkkomaGang/akkoma.git
 
@@ -22,7 +26,7 @@ RUN mix local.hex --force && mix local.rebar --force
 RUN mix deps.get --only ${MIX_ENV}
 RUN mkdir release && mix release --path release
 
-FROM --platform=$TARGETPLATFORM alpine:3.17.3 AS final
+FROM --platform=$TARGETPLATFORM alpine:${ALPINE_VERSION} AS final
 
 ARG UID=911
 ARG GID=911
