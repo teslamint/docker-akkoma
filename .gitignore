@@ -15,3 +15,5 @@ pleroma/
 !pleroma/.gitkeep
 cloudflared/
 !cloudflared/.gitkeep
+.dbbackup/
+!.dbbackup/.gitkeep
