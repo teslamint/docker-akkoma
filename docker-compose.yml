@@ -28,7 +28,8 @@ services:
         condition: service_started
 
   postgres:
-    image: postgres:12-alpine
+    image: postgres:15-alpine
+    shm_size: 1gb
     hostname: db
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "pleroma"]

@@ -31,6 +31,11 @@ config :pleroma, Pleroma.Repo,
   hostname: System.get_env("DB_HOST", "db"),
   pool_size: 10,
   prepare: :named,
+  ssl: true,
+  ssl_opts: [
+    server_name_indication: to_charlist(System.get_env("DB_HOST_SNI")),
+    verify: :verify_none
+  ],
   parameters: [
     plan_cache_mode: "force_custom_plan"
   ]
