@@ -2,6 +2,10 @@
 
 set -e
 
+# update OTP config permission
+chmod o= /etc/pleroma/config.exs
+chmod g-w /etc/pleroma/config.exs
+
 echo "-- Waiting for database..."
 while ! pg_isready -U ${DB_USER:-pleroma} -d postgres://${DB_HOST:-db}:${DB_PORT:-5432}/${DB_NAME:-pleroma} -t 1; do
     sleep 1s
