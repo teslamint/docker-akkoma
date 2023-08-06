@@ -50,7 +50,7 @@ USER pleroma
 COPY --from=builder --chown=pleroma /akkoma/release ${HOME}
 COPY --chown=pleroma ./docker-entrypoint.sh ${HOME}/docker-entrypoint.sh
 
-# COPY ./config.exs /etc/pleroma/config.exs
+COPY ./config.exs /etc/pleroma/config.exs
 
 EXPOSE 4000
 

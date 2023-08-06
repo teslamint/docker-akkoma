@@ -18,7 +18,6 @@ config :pleroma, :media_proxy,
   proxy_opts: [
     redirect_on_failure: true,
   ]
-  # base_url: "https://cache.domain.tld"
 
 config :pleroma, :mrf,
   policies: [Pleroma.Web.ActivityPub.MRF.MediaProxyWarmingPolicy]

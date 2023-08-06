@@ -67,7 +67,6 @@ services:
       - pleroma
     volumes:
       - ./pleroma:/var/lib/pleroma
-      - ./config.exs:/etc/pleroma/config.exs:ro
     env_file:
       - .env.pleroma
     depends_on:
@@ -92,7 +91,7 @@ services:
       - pleroma
     depends_on:
       nginx:
-        condition: service_healthy
+        condition: service_started
     env_file:
       - .env.cloudflared
     volumes:
