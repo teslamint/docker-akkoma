@@ -1,4 +1,5 @@
 .env*
+!.env.sample
 !.env.*.sample
 config/secret.exs
 postgres

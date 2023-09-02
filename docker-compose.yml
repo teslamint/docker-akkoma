@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   nginx:
-    image: nginx:stable-alpine
+    image: ${NGINX_IMAGE:-docker.io/library/nginx}:${NGINX_TAG:-stable-alpine}
     healthcheck:
       test:
         [
@@ -15,8 +15,8 @@ services:
     environment:
       NGINX_PORT: 80
     ports:
-      - "127.0.0.1:8080:80"
-      - "127.0.0.1:10080:10080"
+      - "${COMPOSE_PORT_HTTP:-80}:80"
+      - "${COMPOSE_PORT_HTTP_STATUS:-10080}:10080"
     volumes:
       - ./templates:/etc/nginx/templates
       - nginx_cache:/var/cache/nginx
@@ -28,14 +28,14 @@ services:
         condition: service_started
 
   postgres:
-    image: postgres:15-alpine
+    image: ${POSTGRES_IMAGE:-docker.io/library/postgres}:${POSTGRES_TAG:-15-alpine}
     shm_size: 1gb
     hostname: db
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "pleroma"]
     restart: unless-stopped
     ports:
-      - "127.0.0.1:55432:5432"
+      - "${COMPOSE_PORT_POSTGRES:-5432}:5432"
     networks:
       - pleroma
     env_file:
@@ -44,9 +44,9 @@ services:
       - ./postgres:/var/lib/postgresql/data
 
   meilisearch:
-    image: getmeili/meilisearch:v1.2.0
+    image: docker.io/getmeili/meilisearch:${MEILISEARCH_TAG:-v1.2.0}
     ports:
-      - "127.0.0.1:57700:7700"
+      - "${COMPOSE_PORT_MEILISEARCH:-7700}:7700"
     networks:
       - pleroma
     env_file:
@@ -55,7 +55,7 @@ services:
       - ./meili_data:/meili_data
 
   web:
-    image: teslamint/akkoma:develop
+    image: ${PLEROMA_IMAGE:-docker.io/teslamint/akkoma}:${PLEROMA_TAG:-stable}
     healthcheck:
       test:
         [
@@ -76,7 +76,7 @@ services:
         condition: service_started
 
   pghero:
-    image: ankane/pghero
+    image: ${PGHERO_IMAGE:-docker.io/ankane/pghero}:${PGHERO_TAG:-latest}
     networks:
       - pleroma
     env_file:
@@ -86,7 +86,7 @@ services:
         condition: service_healthy
 
   cloudflared:
-    image: cloudflare/cloudflared:latest
+    image: ${CLOUDFLARED_IMAGE:docker.io/cloudflare/cloudflared}:${CLOUDFLARED_TAG:-latest}
     networks:
       - pleroma
     depends_on:
