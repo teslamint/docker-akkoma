@@ -27,7 +27,7 @@ jobs:
     - name: get latest commit id
       if: ${{ matrix.branch == 'develop' || matrix.branch == 'stable' }}
       run: |
-        BRANCH=${MATRIX_BRANCH}
+        BRANCH=${{ matrix.branch }}
         echo "COMMIT_ID=$(curl "https://akkoma.dev/api/v1/repos/AkkomaGang/akkoma/branches/${BRANCH}" | jq -r '.commit.id')" >> $GITHUB_ENV
         echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
 
