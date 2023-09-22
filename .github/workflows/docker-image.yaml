@@ -17,7 +17,7 @@ jobs:
   build:
     strategy:
       matrix:
-        job:
+        branch:
           - stable
           - develop
     runs-on: self-hosted
@@ -25,9 +25,9 @@ jobs:
     - uses: actions/checkout@v3.5.3
 
     - name: get latest commit id
-      if: ${{ matrix.job.name == 'develop' || matrix.job.name == 'stable' }}
+      if: ${{ matrix.branch == 'develop' || matrix.branch == 'stable' }}
       run: |
-        BRANCH=${MATRIX_JOB_NAME}
+        BRANCH=${MATRIX_BRANCH}
         echo "COMMIT_ID=$(curl "https://akkoma.dev/api/v1/repos/AkkomaGang/akkoma/branches/${BRANCH}" | jq -r '.commit.id')" >> $GITHUB_ENV
         echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
 
