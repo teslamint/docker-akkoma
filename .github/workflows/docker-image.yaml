@@ -2,25 +2,32 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "stable", "develop" ]
+    branches:
+      - main
     tags:
       - stable-*
       - develop-*
   pull_request:
-    branches: [ "stable", "develop" ]
+    branches:
+      - main
   schedule:
     - cron: "0 */12 * * *"
 
 jobs:
   build:
+    strategy:
+      matrix:
+        job:
+          - stable
+          - develop
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v3.5.3
 
     - name: get latest commit id
-      if: ${{ github.ref_name == 'develop' || github.ref_name == 'stable' }}
+      if: ${{ matrix.job.name == 'develop' || matrix.job.name == 'stable' }}
       run: |
-        BRANCH=${GITHUB_REF_NAME}
+        BRANCH=${MATRIX_JOB_NAME}
         echo "COMMIT_ID=$(curl "https://akkoma.dev/api/v1/repos/AkkomaGang/akkoma/branches/${BRANCH}" | jq -r '.commit.id')" >> $GITHUB_ENV
         echo "BRANCH=${BRANCH}" >> $GITHUB_ENV
 
