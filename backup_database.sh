@@ -3,6 +3,7 @@
 set -eou pipefail
 #set -x
 
+BASEPATH="${PWD}"
 BACKUPDIR=".dbbackup"
 FILENAME="base"
 RCLONE_REMOTE="nas"
@@ -11,6 +12,15 @@ COMPRESS="zstd"
 EXT="zst"
 DB_USER="pleroma"
 BACKUP_FULLNAME="${FILENAME}.tar.${EXT}"
+DATE="$(TZ="Asia/Seoul" date +%Y-%m-%d)"
+BACKUP_FULLPATH="${BASEPATH}/${BACKUPDIR}/${BACKUP_FULLNAME}"
+REMOTE_FULLPATH="${RCLONE_REMOTE}:/${REMOTEDIR}/${DATE}"
+BACKUP_DATE_PATH="${BASEPATH}/${BACKUPDIR}/${DATE}"
+
+if [ -e "${BACKUP_DATE_PATH}/${BACKUP_FULLNAME}" ]; then
+    echo "backup already exists. exiting."
+    exit 0
+fi
 
 # check compressor exists
 if [ "$(which $COMPRESS)" = "" ]; then
@@ -19,11 +29,13 @@ if [ "$(which $COMPRESS)" = "" ]; then
 fi
 
 # backup database
-BASEPATH="${PWD}"
-BACKUP_FULLPATH="${BASEPATH}/${BACKUPDIR}/${BACKUP_FULLNAME}"
-docker compose exec -T postgres pg_basebackup -R -D - -F tar -U ${DB_USER} -X f | "${COMPRESS}" - -o "${BACKUP_FULLPATH}"
+if [ ! -e "${BACKUP_FULLPATH}" ]; then
+    docker compose exec -T postgres pg_basebackup -R -D - -F tar -U ${DB_USER} -X f | "${COMPRESS}" - -o "${BACKUP_FULLPATH}"
+fi
 
 # upload to remote
-DATE="$(TZ="Asia/Seoul" date +%Y-%m-%d)"
-REMOTE_FULLPATH="${RCLONE_REMOTE}:/${REMOTEDIR}/${DATE}"
-rclone copy ${BACKUP_FULLPATH} "${REMOTE_FULLPATH}/${BACKUP_FULLNAME}"
+rclone copy "${BACKUP_FULLPATH}" "${REMOTE_FULLPATH}/${BACKUP_FULLNAME}"
+
+# rename backup file
+mkdir -p "${BACKUP_DATE_PATH}"
+mv "${BACKUP_FULLPATH}" "${BACKUP_DATE_PATH}/${BACKUP_FULLNAME}"
