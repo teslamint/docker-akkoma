@@ -1,0 +1,9 @@
+{
+    server :80 {
+        protocol h1 h2c
+    }
+}
+
+:80 {
+    reverse_proxy web:4000
+}
