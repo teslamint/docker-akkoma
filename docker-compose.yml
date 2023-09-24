@@ -15,7 +15,7 @@ services:
     ports:
       - "127.0.0.1:${CADDY_PORT:-8080}:80"
     volumes:
-      - Caddyfile:/etc/caddy/Caddyfile
+      - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
     depends_on:
