@@ -1,6 +1,6 @@
 {
     servers :80 {
-        protocol h1 h2c
+        protocols h1 h2c
     }
 }
 
