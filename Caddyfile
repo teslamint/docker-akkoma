@@ -5,5 +5,7 @@
 }
 
 :80 {
-    reverse_proxy web:4000
+    reverse_proxy {
+        dynamic a web 4000
+    }
 }
