@@ -76,5 +76,5 @@ jobs:
           BRANCH=${{ env.BRANCH }}
         platforms: "linux/amd64,linux/arm64"
         tags: "teslamint/akkoma:${{ env.BRANCH }},teslamint/akkoma:${{ env.COMMIT_ID }}"
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        cache-from: type=gha,scope=${{ env.BRANCH }}
+        cache-to: type=gha,mode=max,scope=${{ env.BRANCH }}
