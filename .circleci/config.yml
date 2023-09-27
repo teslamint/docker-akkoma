@@ -10,6 +10,9 @@ jobs:
     # See: https://circleci.com/docs/configuration-reference/#executor-job
     docker:
       - image: cimg/base:stable
+        auth:
+          username: $DOCKER_HUB_USER
+          password: $DOCKER_HUB_ACCESS_TOKEN
     # Add steps to the job
     # See: https://circleci.com/docs/configuration-reference/#steps
     steps:
@@ -28,5 +31,5 @@ workflows:
   build:
     jobs:
       - build:
-        context:
-          - docker
+          context:
+            - docker
