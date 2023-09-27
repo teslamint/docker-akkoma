@@ -10,9 +10,6 @@ jobs:
     # See: https://circleci.com/docs/configuration-reference/#executor-job
     docker:
       - image: cimg/base:stable
-        auth:
-          username: teslamint
-          password: $DOCKER_HUB_ACCESS_TOKEN
     # Add steps to the job
     # See: https://circleci.com/docs/configuration-reference/#steps
     steps:
@@ -22,7 +19,7 @@ jobs:
       - run:
           name: "Build Docker Image"
           command: |
-            docker login -u teslamint -p $DOCKER_HUB_ACCESS_TOKEN
+            echo "$DOCKER_HUB_ACCESS_TOKEN" | docker login -u teslamint --password-stdin
             docker buildx create --name builder --use
             ./build_image.sh
 
