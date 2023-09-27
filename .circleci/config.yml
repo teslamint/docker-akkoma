@@ -21,7 +21,9 @@ jobs:
           docker_layer_caching: true
       - run:
           name: "Build Docker Image"
-          command: "./build_image.sh"
+          command: |
+            docker login -u teslamint -p $DOCKER_HUB_ACCESS_TOKEN
+            ./build_image.sh
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
