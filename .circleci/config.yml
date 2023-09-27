@@ -23,6 +23,7 @@ jobs:
           name: "Build Docker Image"
           command: |
             docker login -u teslamint -p $DOCKER_HUB_ACCESS_TOKEN
+            docker buildx create --use
             ./build_image.sh
 
 # Orchestrate jobs using workflows
