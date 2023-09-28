@@ -5,7 +5,7 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/configuration-reference/#jobs
 jobs:
-  build:
+  build-develop:
     # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/configuration-reference/#executor-job
     docker:
@@ -22,12 +22,32 @@ jobs:
             echo "$DOCKER_HUB_ACCESS_TOKEN" | docker login -u teslamint --password-stdin
             docker buildx create --name builder --use
             ./build_image.sh
+  build-stable:
+    # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/configuration-reference/#executor-job
+    docker:
+      - image: cimg/base:stable
+    # Add steps to the job
+    # See: https://circleci.com/docs/configuration-reference/#steps
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: "Build Docker Image"
+          command: |
+            echo "$DOCKER_HUB_ACCESS_TOKEN" | docker login -u teslamint --password-stdin
+            docker buildx create --name builder --use
+            BRANCH=stable ./build_image.sh
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
 workflows:
   build:
     jobs:
-      - build:
+      - build-develop:
+          context:
+            - docker
+      - build-stable:
           context:
             - docker
