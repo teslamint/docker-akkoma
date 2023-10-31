@@ -12,18 +12,11 @@ get_service_index() {
   $DOCKER_COMPOSE ps $SERVICE_NAME|tail -n1|awk '{print $1}'|sed -e s,akkoma-$SERVICE_NAME-,,
 }
 
-reload_nginx() {
-  NGINX_SERVICE_INDEX=$(get_service_index nginx)
-  $DOCKER_COMPOSE exec -T --index=$NGINX_SERVICE_INDEX nginx /usr/sbin/nginx -s reload
-}
-
 # check image already built
 $DOCKER_COMPOSE pull
 
 # docker rollout plugin required: https://github.com/Wowu/docker-rollout
 docker rollout web
-# stop routing requests to the old container
-reload_nginx
 
 # install frontends
 if [ ! -d pleroma/static/frontends ]; then
