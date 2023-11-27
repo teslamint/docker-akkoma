@@ -23,6 +23,8 @@ workflows:
   build-deploy:
     jobs:
       - build:
+          context:
+            - docker
           matrix:
             parameters:
               branch: ["stable", "develop"]
