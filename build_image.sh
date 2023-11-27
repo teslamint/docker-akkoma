@@ -18,5 +18,5 @@ if [[ "$BRANCH" = "develop" ]]; then
     TAGS="-t ${IMAGE}:latest $TAGS"
 fi
 
-docker buildx build --rm $TAGS . \
+docker buildx build --rm $TAGS . --progress plain \
     --build-arg "BRANCH=$BRANCH" --build-arg "PLEROMA_VER=$COMMIT_ID" --platform "linux/amd64,linux/arm64" --push
