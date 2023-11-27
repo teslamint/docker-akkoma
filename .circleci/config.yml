@@ -17,7 +17,7 @@ jobs:
           command: |
             echo "$DOCKER_HUB_ACCESS_TOKEN" | docker login -u teslamint --password-stdin
             docker buildx create --name builder --use
-            BRANCH=${<< parameters.branch >>} ./build_image.sh
+            BRANCH="<< parameters.branch >>" ./build_image.sh
 
 workflows:
   build-deploy:
