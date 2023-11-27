@@ -158,3 +158,20 @@ Index: akkoma/config/description.exs
      key: Pleroma.Upload.Filter.Mogrify,
      type: :group,
      description: "Uploads mogrify filter settings",
+Index: akkoma/config/config.exs
+===================================================================
+--- akkoma.orig/config/config.exs
++++ akkoma/config/config.exs
+@@ -75,6 +75,12 @@ config :pleroma, Pleroma.Uploaders.S3,
+   truncated_namespace: nil,
+   streaming_enabled: true
+ 
++config :pleroma, Pleroma.Uploaders.R2,
++  bucket: nil,
++  bucket_namespace: nil,
++  truncated_namespace: nil,
++  streaming_enabled: true
++
+ config :ex_aws, :s3,
+   # host: "s3.wasabisys.com", # required if not Amazon AWS
+   access_key_id: nil,
