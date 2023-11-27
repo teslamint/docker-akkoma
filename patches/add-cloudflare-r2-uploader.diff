@@ -89,7 +89,7 @@ Index: akkoma/lib/pleroma/uploaders/r2.ex
 +
 +      error ->
 +        Logger.error("#{__MODULE__}: #{inspect(error)}")
-+        {:error, "S3 Upload failed"}
++        {:error, "R2 Upload failed"}
 +    end
 +  end
 +
@@ -111,3 +111,50 @@ Index: akkoma/lib/pleroma/uploaders/r2.ex
 +  end
 +end
 +
+Index: akkoma/config/description.exs
+===================================================================
+--- akkoma.orig/config/description.exs
++++ akkoma/config/description.exs
+@@ -173,6 +173,42 @@ config :pleroma, :config_description, [
+   },
+   %{
+     group: :pleroma,
++    key: Pleroma.Uploaders.R2,
++    type: :group,
++    description: "R2 uploader-related settings",
++    children: [
++      %{
++        key: :bucket,
++        type: :string,
++        description: "R2 bucket",
++        suggestions: [
++          "bucket"
++        ]
++      },
++      %{
++        key: :bucket_namespace,
++        type: :string,
++        description: "R2 bucket namespace",
++        suggestions: ["pleroma"]
++      },
++      %{
++        key: :truncated_namespace,
++        type: :string,
++        description:
++          "If you use S3 compatible service such as Digital Ocean Spaces or CDN, set folder name or \"\" etc." <>
++            " For example, when using CDN to S3 virtual host format, set \"\". At this time, write CNAME to CDN in Upload base_url.",
++        suggestions: ["/"]
++      },
++      %{
++        key: :streaming_enabled,
++        type: :boolean,
++        description:
++          "Enable streaming uploads, when enabled the file will be sent to the server in chunks as it's being read. This may be unsupported by some providers, try disabling this if you have upload problems."
++      }
++    ]
++  },
++  %{
++    group: :pleroma,
+     key: Pleroma.Upload.Filter.Mogrify,
+     type: :group,
+     description: "Uploads mogrify filter settings",
