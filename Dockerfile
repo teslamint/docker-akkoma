@@ -11,7 +11,8 @@ ARG PLEROMA_VER=develop
 ARG BRANCH=develop
 ARG DATA=/var/lib/pleroma
 
-RUN apk -U add --no-cache git gcc g++ musl-dev make cmake file-dev ffmpeg imagemagick exiftool patch
+RUN apk -U add --no-cache git gcc g++ musl-dev make cmake file-dev ffmpeg imagemagick exiftool patch && \
+    apk add --no-cache quilt --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing/
 
 RUN git clone -b "${BRANCH}" --depth=10 https://akkoma.dev/AkkomaGang/akkoma.git
 
@@ -19,8 +20,9 @@ WORKDIR /akkoma
 
 RUN git checkout "${PLEROMA_VER}"
 
-# Comment out below line if you don't use Cloudflare R2
-RUN wget -O- https://gist.githubusercontent.com/teslamint/1ca70d83197409be662966e8f1fea257/raw/35c7e2d85e7e1d08f45a67afcd1319c70f7b366b/patch-1.patch | patch -p1
+# Comment out 2 lines below if you don't use Cloudflare R2
+COPY ./patches /akkoma/patches/
+RUN quilt push -a
 
 RUN echo "import Mix.Config" > config/prod.secret.exs
 RUN mix local.hex --force && mix local.rebar --force
