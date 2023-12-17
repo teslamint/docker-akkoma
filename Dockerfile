@@ -12,7 +12,7 @@ ARG BRANCH=develop
 ARG DATA=/var/lib/pleroma
 
 RUN apk -U add --no-cache git gcc g++ musl-dev make cmake file-dev ffmpeg imagemagick exiftool patch && \
-    apk add --no-cache quilt --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing/
+    apk add --no-cache quilt --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community/
 
 RUN git clone -b "${BRANCH}" --depth=10 https://akkoma.dev/AkkomaGang/akkoma.git
 
