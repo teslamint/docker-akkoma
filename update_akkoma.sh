@@ -18,6 +18,9 @@ $DOCKER_COMPOSE pull
 # docker rollout plugin required: https://github.com/Wowu/docker-rollout
 docker rollout web
 
+# reload caddy
+docker compose exec -w /etc/caddy caddy caddy reload
+
 # install frontends
 if [ ! -d pleroma/static/frontends ]; then
     mkdir -p pleroma/static/frontends
