@@ -7,4 +7,16 @@
 :80 {
 	encode gzip
 	reverse_proxy web:4000
+
+	route /inbox {
+		reverse_proxy budae:3000
+	}
+
+	route /relay/inbox {
+		reverse_proxy budae:3000
+	}
+
+	route /users/*/inbox {
+		reverse_proxy budae:3000
+	}
 }
