@@ -93,26 +93,6 @@ services:
       - ./cloudflared:/etc/cloudflared
     command: "tunnel run"
 
-  budae:
-    image: perillamint/budae-jjigae:latest
-    logging:
-      driver: json-file
-      options:
-        max-size: '10m'
-        max-file: '10'
-        labels: 'docker_logs'
-    restart: always
-    command:
-      - "/usr/bin/budae-jjigae"
-      - "--backend"
-      - "web:4000"
-    networks:
-      - pleroma
-    environment:
-      - RUST_LOG=info
-    depends_on:
-      - web
-
 volumes:
   caddy_data:
   caddy_config:
