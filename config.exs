@@ -15,6 +15,7 @@ config :pleroma, :instance,
 
 config :pleroma, :media_proxy,
   enabled: true,
+  base_url: "/",
   proxy_opts: [
     redirect_on_failure: true,
   ]
