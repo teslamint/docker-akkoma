@@ -12,16 +12,22 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
-      - run: |
-          mkdir -vp ~/.docker/cli-plugins/
-          ARCH=amd64
-          BUILDX_URL=$(curl -s https://raw.githubusercontent.com/docker/actions-toolkit/main/.github/buildx-lab-releases.json | jq -r ".latest.assets[] | select(endswith(\"linux-$ARCH\"))")
-          curl --silent -L --output ~/.docker/cli-plugins/docker-buildx $BUILDX_URL
-          chmod a+x ~/.docker/cli-plugins/docker-buildx
-      - run: echo "$DOCKER_HUB_ACCESS_TOKEN" | docker login -u $DOCKER_ACCOUNT --password-stdin
-      - run: docker buildx create --name builder --use --driver cloud "${DOCKER_ACCOUNT}/${CLOUD_BUILDER_NAME}"
       - run:
-          name: "Build Docker Image"
+          name: "Download buildx plugin"
+          command: |
+            mkdir -vp ~/.docker/cli-plugins/
+            ARCH=amd64
+            BUILDX_URL=$(curl -s https://raw.githubusercontent.com/docker/actions-toolkit/main/.github/buildx-lab-releases.json | jq -r ".latest.assets[] | select(endswith(\"linux-$ARCH\"))")
+            curl --silent -L --output ~/.docker/cli-plugins/docker-buildx $BUILDX_URL
+            chmod a+x ~/.docker/cli-plugins/docker-buildx
+      - run:
+          name: "Login to docker.io"
+          command: echo "$DOCKER_HUB_ACCESS_TOKEN" | docker login -u $DOCKER_ACCOUNT --password-stdin
+      - run:
+          name: "Create Docker Buildx Builder"
+          command: docker buildx create --name builder --use --driver cloud "${DOCKER_ACCOUNT}/${CLOUD_BUILDER_NAME}"
+      - run:
+          name: "Build Container Image"
           command: |
             BRANCH="<< parameters.branch >>" ./build_image.sh
 
