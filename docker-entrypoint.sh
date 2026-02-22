@@ -22,4 +22,4 @@ if ! $HOME/bin/pleroma_ctl migrate; then
 fi
 
 echo "-- Starting!"
-exec $HOME/bin/pleroma foreground
+exec $HOME/bin/pleroma start
