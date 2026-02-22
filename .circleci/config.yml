@@ -17,8 +17,9 @@ jobs:
           command: |
             mkdir -vp ~/.docker/cli-plugins/
             ARCH=amd64
-            BUILDX_URL="https://github.com/docker/buildx-desktop/releases/download/v0.31.1-desktop.1/buildx-v0.31.1-desktop.1.linux-${ARCH}"
-            curl --silent -L --output ~/.docker/cli-plugins/docker-buildx "$BUILDX_URL"
+            BUILDX_VERSION=v0.31.1
+            curl --silent -L --output ~/.docker/cli-plugins/docker-buildx \
+              "https://github.com/docker/buildx/releases/download/${BUILDX_VERSION}/buildx-${BUILDX_VERSION}.linux-${ARCH}"
             chmod a+x ~/.docker/cli-plugins/docker-buildx
       - run:
           name: "Login to docker.io"
