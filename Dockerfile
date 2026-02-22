@@ -9,22 +9,22 @@ ENV MIX_ENV=prod
 
 ARG PLEROMA_VER=develop
 ARG BRANCH=develop
-ARG DATA=/var/lib/pleroma
+ARG APPLY_PATCHES=true
 
 RUN apk -U add --no-cache cmake exiftool ffmpeg file-dev g++ gcc git imagemagick make musl-dev patch && \
     apk add --no-cache quilt --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community/
 
-RUN git clone -b "${BRANCH}" --depth=10 https://akkoma.dev/AkkomaGang/akkoma.git
+RUN git clone --no-checkout --depth=1 -b "${BRANCH}" https://akkoma.dev/AkkomaGang/akkoma.git
 
 WORKDIR /akkoma
 
-RUN git checkout "${PLEROMA_VER}"
+RUN git fetch --depth=1 origin "${PLEROMA_VER}" && git checkout FETCH_HEAD
 
 # Comment out 2 lines below if you don't use Cloudflare R2
 COPY ./patches /akkoma/patches/
-RUN quilt push -a
+RUN if [ "${APPLY_PATCHES}" = "true" ]; then quilt push -a; fi
 
-RUN echo "import Mix.Config" > config/prod.secret.exs
+RUN echo "import Config" > config/prod.secret.exs
 RUN mix local.hex --force && mix local.rebar --force
 RUN mix deps.get --only ${MIX_ENV}
 RUN mkdir release && mix release --path release
