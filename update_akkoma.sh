@@ -13,7 +13,7 @@ fi
 
 get_service_index() {
   SERVICE_NAME=$1
-  $DOCKER_COMPOSE ps --format json "$SERVICE_NAME" | jq -r '.[0].Name' | sed -e "s,akkoma-${SERVICE_NAME}-,,"
+  $DOCKER_COMPOSE ps --format json "$SERVICE_NAME" | jq -sr '.[0].Name' | sed -e "s,akkoma-${SERVICE_NAME}-,,"
 }
 
 # check image already built
